@@ -12,8 +12,9 @@
     > And run redis-server.exe (we are running this to set up RunTime env for Redis)
     > open this directory in your favorite editor.
     > In your favorite CLI run these commands:
-      > npm i
-      > npm start
+        > cd .\BackEnd\
+        > npm i
+        > npm start
     > Now the server is up and running.
 
 ### Team: Sociologic
