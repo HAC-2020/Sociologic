@@ -1,6 +1,6 @@
 # Problem Statement: Hard to track COVID contact tracing. 
 
-## Solution: COVID PATH => An application that tracks COVID registered patients to keep you informed about your vicinity 
+## Solution: COVID PATH => An application that tracks all the registered users to keep you informed about your vicinity.
 
 ### Assumptions:
     > We have a good amount of traffic
