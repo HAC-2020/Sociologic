@@ -8,33 +8,70 @@ exports.addLocation = async (req, res) => {
 	var lat = req.body.latitude;
 	var long = req.body.longitude;
 	var _id = req.params._id;
-	console.log(`${lat}`);
+	var time = req.body.timestamp;
+	var temp='';
 	try {
-		await geo.addLocation(_id, { latitude: lat, longitude: long }, function (
-			err,
-			reply
-		) {
-			console.log(`err=${err}`);
-			console.log(`reply=${reply}`);
-
-			if (err) {
-				res.json({ msg: err });
-			} else {
-				console.log("added location:", reply);
-				res.send("Done");
-			}
+		client.GEOADD(_id, long, lat, time,
+			function(err, reply){
+				if(err){
+					return res.json({ msg: err });
+				}else{
+					console.log(reply);
+					temp += "Added with timestamp"; 
+					
+				}
+			});
+		client.GEOADD("users", long, lat, _id,
+			function(err, reply){
+				if (err) {
+					return res.json({ msg: err });
+				} else {
+					console.log("added location:", reply);
+					temp+=" Geo Done";
+					
+				}
 		});
 	} catch (error) {
 		console.log(error);
-		res.send(error);
+		return res.send(error);
 	}
 };
 
 exports.getLocation = (req, res) => {
 	let _id = req.params._id;
-	geo.location(_id, function (err, location) {
-		if (err || !location) {
+	let temp;
+	client.geopos("users", _id, function(err, num){
+		if(err){
 			return res.send("err");
-		} else return res.send(location);
+		}else{
+			return res.send(num);
+		}
 	});
 };
+
+exports.getMembersNear =(req, res)=>{	
+	var _id = req.params._id;
+	console.log(_id);
+	client.georadiusbymember("users", _id, 1, "km",
+		function(err, reply){
+			if (err) {
+				return res.json({ msg: err });
+			} else {
+				return res.send(reply);
+			}
+		}
+	);
+}
+
+exports.getPositionsUser=(req, res)=>{
+	var _id = req.params._id;
+	client.zrange(_id, 0, -1,
+		function(err, num){
+			if (err|| !num) {
+				return res.json({ msg: err });
+			} else {
+				console.log("added time stamp: ", num);
+				return res.send(num);
+			}
+	});
+}
